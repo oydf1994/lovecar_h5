@@ -1,27 +1,27 @@
 <template>
-  <div>
+  <div id="win">
     <table class="table table-striped" v-show="flag">
       <thead>
         <tr>
           <th>序号</th>
-          <th>2</th>
-          <th>3</th>
-          <th>4</th>
-          <th>操作</th>
+          <th>号码</th>
+          <th>押注</th>
+          <th>盈利</th>
+          <th>胜利</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in list">
+        <tr v-for="item in list" :key="item.number">
           <td>{{item.number}}</td>
-          <td>{{item.lottery}}</td>
-          <td>{{item.chip}}</td>
+          <td><img src="./../assets/car.png" alt="" class="car">{{item.lottery}}</td>
+          <td class="win">￥{{item.chip}}</td>
           <td>{{item.profit}}</td>
           <td>
             <div v-show="item.win">
-              <el-button type="primary"  @click="Judge(item,true)">是</el-button>
-              <el-button type="danger"  @click="Judge(item,false)">否</el-button>
+              <el-button type="primary"  @click="Judge(item,true)">赢</el-button>
+              <el-button type="danger"  @click="Judge(item,false)">输</el-button>
             </div>
-            <div v-show="!item.win">
+            <div v-show="!item.win" :class="item.text == '赢'?'wins':'errs'">
              {{item.text}}
             </div>
           </td>
@@ -33,92 +33,91 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       list: [],
       flag: false,
       initial: 0
-    }
+    };
   },
   methods: {
-    Judge (item, flag) {
-      item.win = false
-      console.log(item.number.length)
-      let num = item.number - 0 + 1 >= 10 ? '0' : '00'
+    Judge(item, flag) {
+      item.win = false;
+      let num = item.number - 0 + 1 >= 10 ? "0" : "00";
       if (flag) {
         let win = {
           number: num + (item.number - 0 + 1),
           lottery: this.win(),
-          chip: item.chip,
-          profit: item.profit,
+          chip: this.initial,
+          profit: this.initial * (item.number - 0 + 1),
           win: true,
-          text: '',
-          profit: this.initial * (item.number - 0 + 1)
-        }
-        this.list.push(win)
-        item.text = '是'
+          text: ""
+        };
+        this.list.push(win);
+        item.text = "赢";
       } else {
         let win = {
           number: num + (item.number - 0 + 1),
           lottery: this.win(),
-          chip: item.chip * 2 + (item.profit - 0),
-          profit: item.profit,
+          chip: item.chip * 2 - 0 + (this.initial - 0),
           win: true,
-          text: '',
+          text: "",
           profit: this.initial * (item.number - 0 + 1)
-        }
-        this.list.push(win)
-        item.text = '否'
+        };
+        this.list.push(win);
+        item.text = "输";
       }
     },
-    win () {
-      let win = Math.ceil(Math.random() * 10)
-      return win
+    win() {
+      let win = Math.floor(Math.random() * 10 + 1);
+      if (win < 10) {
+        win = "0" + win;
+      }
+      return win;
     },
-    open () {
-      this.$prompt('请输入基数', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-      }).then(({
-        value
-      }) => {
-        if (value == null) {
+    open() {
+      this.$prompt("请输入基数", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(({ value }) => {
+          if (value == null) {
+            this.$message({
+              type: "info",
+              message: "请重新输入"
+            });
+            this.open();
+            return false;
+          }
+          this.flag = true;
+          this.initial = value;
+          let win = {
+            number: "001",
+            lottery: this.win(),
+            chip: value,
+            profit: value,
+            win: true,
+            text: ""
+          };
+          this.list.push(win);
           this.$message({
-            type: 'info',
-            message: '请重新输入'
+            type: "success",
+            message: "你的基数是: " + value
           });
-          this.open()
-          return false
-        }
-        this.flag = true
-        this.initial = value
-        let win = {
-          number: '001',
-          lottery: this.win(),
-          chip: value,
-          profit: value,
-          win: true,
-          text: ''
-        }
-        this.list.push(win)
-        this.$message({
-          type: 'success',
-          message: '你的基数是: ' + value
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+          this.open();
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-        this.open()
-      });
     }
   },
-  mounted () {
-    this.open()
+  mounted() {
+    this.open();
   }
-}
-
+};
 </script>
 
 <style scoped>
@@ -126,5 +125,17 @@ th,
 td {
   text-align: center;
   line-height: 40px;
+}
+.win {
+  color: red;
+}
+.car {
+  width: 20px;
+}
+.wins {
+  color: #0099ff;
+}
+.errs {
+  color: #cc3333;
 }
 </style>
