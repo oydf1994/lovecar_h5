@@ -74,7 +74,7 @@ export default {
       if (win < 10) {
         win = "0" + win;
       }
-      firstsd == 0 ? '双' : '单'
+      firstsd = firstsd ? '单' : '双'
       console.log(firstsd)
       return win + firstsd;
     },
