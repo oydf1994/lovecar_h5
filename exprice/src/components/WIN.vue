@@ -75,7 +75,6 @@ export default {
         win = "0" + win;
       }
       firstsd = firstsd ? '单' : '双'
-      console.log(firstsd)
       return win + firstsd;
     },
     open () {
