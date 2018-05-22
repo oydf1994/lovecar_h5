@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       list: [],
       flag: false,
@@ -41,7 +41,7 @@ export default {
     };
   },
   methods: {
-    Judge(item, flag) {
+    Judge (item, flag) {
       item.win = false;
       let num = item.number - 0 + 1 >= 10 ? "0" : "00";
       if (flag) {
@@ -68,14 +68,17 @@ export default {
         item.text = "输";
       }
     },
-    win() {
+    win () {
       let win = Math.floor(Math.random() * 10 + 1);
+      let firstsd = Math.floor(Math.random() * 10 + 1) % 2;
       if (win < 10) {
         win = "0" + win;
       }
-      return win;
+      firstsd == 0 ? '双' : '单'
+      console.log(firstsd)
+      return win + firstsd;
     },
-    open() {
+    open () {
       this.$prompt("请输入基数", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
@@ -114,7 +117,7 @@ export default {
         });
     }
   },
-  mounted() {
+  mounted () {
     this.open();
   }
 };
