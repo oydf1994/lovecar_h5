@@ -75,7 +75,7 @@ export default {
         win = "0" + win;
       }
       firstsd = firstsd ? '单' : '双'
-      return win + firstsd;
+      return win + '-' + firstsd;
     },
     open () {
       this.$prompt("请输入基数", {
