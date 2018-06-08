@@ -1,4 +1,4 @@
-# exprice
+# east
 
 > A Vue.js project
 
